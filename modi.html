@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Modi Run: Path to Viksit Bharat 2047</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #202020;
+            font-family: 'Press Start 2P', cursive;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            touch-action: none; /* Prevent zooming on mobile */
+        }
+
+        #game-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            aspect-ratio: 16/9;
+            background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            border: 4px solid #333;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            text-shadow: 2px 2px 0 #000;
+            font-size: 16px;
+        }
+
+        .hud-left { color: #FF9933; } /* Saffron */
+        .hud-right { color: #138808; } /* Green */
+
+        #message-area {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 80%;
+            text-shadow: 2px 2px 0 #000;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .milestone-text {
+            color: #FFD700;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .milestone-sub {
+            color: #fff;
+            font-size: 12px;
+        }
+
+        #start-screen, #game-over-screen, #win-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: auto;
+            text-align: center;
+            z-index: 10;
+        }
+
+        h1 {
+            color: #FF9933;
+            text-shadow: 3px 3px 0 #fff, 6px 6px 0 #138808;
+            font-size: 32px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        p {
+            font-size: 12px;
+            line-height: 1.8;
+            color: #ddd;
+            max-width: 80%;
+            margin-bottom: 30px;
+        }
+
+        button {
+            background: #FF9933;
+            border: 2px solid #fff;
+            color: #fff;
+            padding: 15px 30px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 16px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 4px 4px 0 #138808;
+            transition: transform 0.1s;
+        }
+
+        button:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 #138808;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Mobile controls hint */
+        #mobile-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(0,0,0,0.5);
+            font-size: 10px;
+            display: none;
+        }
+
+        @media (hover: none) {
+            #mobile-controls { display: block; }
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <canvas id="gameCanvas"></canvas>
+    
+    <div id="ui-layer">
+        <div class="hud">
+            <div class="hud-left" id="year-display">YEAR: 2014</div>
+            <div class="hud-right" id="score-display">VIKSIT BHARAT: 0%</div>
+        </div>
+        <div id="message-area">
+            <div class="milestone-text" id="m-title">MILESTONE!</div>
+            <div class="milestone-sub" id="m-desc">Description here</div>
+        </div>
+        <div id="mobile-controls">TAP TO JUMP</div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="start-screen">
+        <h1>PATH TO<br>VIKSIT BHARAT</h1>
+        <p>Guide PM Modi from 2014 to 2047.<br>Jump over obstacles and collect milestones.<br>Build the New India!</p>
+        <button id="start-btn">START MISSION</button>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="game-over-screen" class="hidden">
+        <h1 style="color: #ff5555; text-shadow: 3px 3px 0 #000;">BLOCKED!</h1>
+        <p>The journey stopped at <span id="final-year">20XX</span>.<br>Roadblocks slowed the progress.</p>
+        <button id="restart-btn">TRY AGAIN</button>
+    </div>
+
+    <!-- Win Screen -->
+    <div id="win-screen" class="hidden">
+        <h1>VIKSIT BHARAT<br>2047</h1>
+        <p>Congratulations!<br>India is now a Developed Nation.<br>The vision is complete.</p>
+        <button id="play-again-btn">PLAY AGAIN</button>
+    </div>
+</div>
+
+<script>
+    /**
+     * GAME CONFIGURATION & ASSETS
+     */
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Game State
+    let animationId;
+    let frames = 0;
+    let gameSpeed = 5;
+    let isPlaying = false;
+    let score = 0; // Represents progress to Viksit Bharat
+    let currentYear = 2014;
+    let yearProgress = 0; // Float to track progress within a year
+    
+    // Constants
+    const CANVAS_WIDTH = 800;
+    const CANVAS_HEIGHT = 450;
+    const GRAVITY = 0.6;
+    const JUMP_STRENGTH = -12;
+    const FLOOR_HEIGHT = 50;
+    const TOTAL_YEARS = 2047 - 2014;
+    const FRAMES_PER_YEAR = 300; // How many frames equals one year
+    
+    // Milestones Data
+    const milestones = [
+        { year: 2014, title: "SWACHH BHARAT", desc: "Clean India Mission Launched!" },
+        { year: 2016, title: "DIGITAL INDIA", desc: "UPI & Tech Revolution Begins" },
+        { year: 2017, title: "GST LAUNCH", desc: "One Nation, One Tax" },
+        { year: 2019, title: "ARTICLE 370", desc: "Abrogation & Unity" },
+        { year: 2020, title: "PANDEMIC BEATEN", desc: "Vaccine Maitri & Resilience" },
+        { year: 2023, title: "CHANDRAYAAN-3", desc: "India on the Moon!" },
+        { year: 2024, title: "RAM MANDIR", desc: "Pran Pratishtha at Ayodhya" },
+        { year: 2029, title: "3RD LARGEST ECO", desc: "Economy Surges Ahead" },
+        { year: 2035, title: "SPACE STATION", desc: "Bharatiya Antariksh Station" },
+        { year: 2040, title: "ENERGY INDEPENDENT", desc: "Green Energy Dominance" },
+        { year: 2047, title: "VIKSIT BHARAT", desc: "A Developed Nation!" }
+    ];
+
+    let nextMilestoneIndex = 0;
+
+    /**
+     * ENTITIES
+     */
+    
+    // Player (Modi)
+    const player = {
+        x: 100,
+        y: CANVAS_HEIGHT - FLOOR_HEIGHT - 60,
+        width: 40,
+        height: 60,
+        dy: 0,
+        jumpTimer: 0,
+        grounded: true,
+        draw: function() {
+            // Simple pixel art style using rectangles
+            
+            // Kurta (Orange/White)
+            ctx.fillStyle = '#FFA500'; // Saffron top
+            ctx.fillRect(this.x, this.y + 20, this.width, 25);
+            ctx.fillStyle = '#FFFFFF'; // White bottom
+            ctx.fillRect(this.x, this.y + 45, this.width, 15);
+            
+            // Jacket (Blue vest)
+            ctx.fillStyle = '#2255AA';
+            ctx.fillRect(this.x + 5, this.y + 20, this.width - 10, 25);
+
+            // Head (Skin tone)
+            ctx.fillStyle = '#F5CBA7';
+            ctx.fillRect(this.x + 8, this.y, 24, 20);
+            
+            // Hair/Beard (White)
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(this.x + 8, this.y, 24, 6); // Hair
+            ctx.fillRect(this.x + 8, this.y + 14, 24, 8); // Beard
+
+            // Glasses
+            ctx.fillStyle = '#333';
+            ctx.fillRect(this.x + 10, this.y + 8, 8, 2);
+            ctx.fillRect(this.x + 22, this.y + 8, 8, 2);
+            ctx.fillRect(this.x + 18, this.y + 9, 4, 1); // Bridge
+
+            // Legs
+            ctx.fillStyle = '#DDDDDD';
+            if (Math.floor(frames / 10) % 2 === 0 || !this.grounded) {
+                // Leg pose 1
+                ctx.fillRect(this.x + 5, this.y + 60, 12, 10); // Left
+                ctx.fillRect(this.x + 23, this.y + 60, 12, 10); // Right
+            } else {
+                // Leg pose 2 (Running)
+                ctx.fillRect(this.x + 8, this.y + 60, 12, 8); 
+                ctx.fillRect(this.x + 20, this.y + 60, 12, 8);
+            }
+        },
+        update: function() {
+            // Jump Physics
+            if (keys['Space'] || keys['ArrowUp'] || keys['Touch']) {
+                if (this.grounded) {
+                    this.dy = JUMP_STRENGTH;
+                    this.grounded = false;
+                }
+            }
+
+            this.y += this.dy;
+            
+            // Gravity
+            if (this.y + this.height < CANVAS_HEIGHT - FLOOR_HEIGHT) {
+                this.dy += GRAVITY;
+                this.grounded = false;
+            } else {
+                this.dy = 0;
+                this.grounded = true;
+                this.y = CANVAS_HEIGHT - FLOOR_HEIGHT - this.height;
+            }
+        }
+    };
+
+    // Obstacles
+    let obstacles = [];
+    class Obstacle {
+        constructor() {
+            this.width = 40;
+            this.height = 40 + Math.random() * 30;
+            this.x = CANVAS_WIDTH;
+            this.y = CANVAS_HEIGHT - FLOOR_HEIGHT - this.height;
+            this.type = Math.random() > 0.5 ? 'roadblock' : 'interference';
+        }
+
+        draw() {
+            if (this.type === 'roadblock') {
+                // Barricade style
+                ctx.fillStyle = '#D32F2F'; // Red
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+                // Stripes
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(this.x + 5, this.y + 10, this.width - 10, 5);
+                ctx.fillRect(this.x + 5, this.y + 30, this.width - 10, 5);
+            } else {
+                // Dark generic block
+                ctx.fillStyle = '#444';
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+                ctx.fillStyle = '#000';
+                ctx.fillRect(this.x + 5, this.y + 5, this.width - 10, this.height - 10);
+                // Question mark
+                ctx.fillStyle = '#888';
+                ctx.font = '20px Arial';
+                ctx.fillText('?', this.x + 15, this.y + 30);
+            }
+        }
+
+        update() {
+            this.x -= gameSpeed;
+        }
+    }
+
+    // Background Elements (Clouds, Distant buildings)
+    let clouds = [];
+    class Cloud {
+        constructor() {
+            this.x = CANVAS_WIDTH + Math.random() * 200;
+            this.y = Math.random() * (CANVAS_HEIGHT / 2);
+            this.width = 60 + Math.random() * 40;
+            this.speed = gameSpeed * 0.2;
+        }
+        draw() {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, 20, 0, Math.PI * 2);
+            ctx.arc(this.x + 25, this.y - 10, 30, 0, Math.PI * 2);
+            ctx.arc(this.x + 50, this.y, 20, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        update() {
+            this.x -= this.speed;
+        }
+    }
+
+    /**
+     * INPUT HANDLING
+     */
+    const keys = {};
+    
+    window.addEventListener('keydown', function (e) {
+        if(e.code === 'Space') e.preventDefault(); // Prevent scrolling
+        keys[e.code] = true;
+    });
+
+    window.addEventListener('keyup', function (e) {
+        keys[e.code] = false;
+    });
+
+    // Touch controls
+    const gameContainer = document.getElementById('game-container');
+    gameContainer.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        keys['Touch'] = true;
+    }, {passive: false});
+    
+    gameContainer.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        keys['Touch'] = false;
+    }, {passive: false});
+
+    /**
+     * GAME LOGIC
+     */
+
+    function spawnObstacle() {
+        // Spawn chance based on difficulty/speed
+        // Don't spawn if we just started or finished
+        if (currentYear >= 2047) return;
+
+        // Random gap between 60 and 150 frames
+        if (frames % 100 === 0) {
+            if (Math.random() < 0.6) {
+                obstacles.push(new Obstacle());
+            }
+        }
+    }
+
+    function spawnCloud() {
+        if (Math.random() < 0.01) {
+            clouds.push(new Cloud());
+        }
+    }
+
+    function checkCollision(rect1, rect2) {
+        return (
+            rect1.x < rect2.x + rect2.width &&
+            rect1.x + rect1.width > rect2.x &&
+            rect1.y < rect2.y + rect2.height &&
+            rect1.y + rect1.height > rect2.y
+        );
+    }
+
+    function showMilestone(m) {
+        const msgArea = document.getElementById('message-area');
+        const mTitle = document.getElementById('m-title');
+        const mDesc = document.getElementById('m-desc');
+        
+        mTitle.innerText = m.title;
+        mDesc.innerText = m.desc;
+        
+        msgArea.style.opacity = 1;
+        
+        // Hide after 3 seconds
+        setTimeout(() => {
+            msgArea.style.opacity = 0;
+        }, 3000);
+    }
+
+    function updateGame() {
+        if (!isPlaying) return;
+
+        ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+        // Update Year
+        yearProgress += (gameSpeed / FRAMES_PER_YEAR);
+        let actualYear = 2014 + Math.floor(yearProgress);
+        
+        if (actualYear > currentYear) {
+            currentYear = actualYear;
+            // Speed up slightly every 5 years
+            if (currentYear % 5 === 0) gameSpeed += 0.5;
+            
+            // Check Milestones
+            if (nextMilestoneIndex < milestones.length && currentYear >= milestones[nextMilestoneIndex].year) {
+                showMilestone(milestones[nextMilestoneIndex]);
+                nextMilestoneIndex++;
+            }
+        }
+
+        // Draw Floor
+        ctx.fillStyle = '#8B4513'; // Dirt
+        ctx.fillRect(0, CANVAS_HEIGHT - FLOOR_HEIGHT, CANVAS_WIDTH, FLOOR_HEIGHT);
+        ctx.fillStyle = '#4CAF50'; // Grass
+        ctx.fillRect(0, CANVAS_HEIGHT - FLOOR_HEIGHT, CANVAS_WIDTH, 10);
+
+        // Update & Draw Clouds
+        spawnCloud();
+        clouds.forEach((cloud, index) => {
+            cloud.update();
+            cloud.draw();
+            if (cloud.x + cloud.width < 0) clouds.splice(index, 1);
+        });
+
+        // Update & Draw Player
+        player.update();
+        player.draw();
+
+        // Update & Draw Obstacles
+        spawnObstacle();
+        obstacles.forEach((obs, index) => {
+            obs.update();
+            obs.draw();
+
+            if (checkCollision(player, obs)) {
+                endGame();
+            }
+
+            if (obs.x + obs.width < 0) {
+                obstacles.splice(index, 1);
+            }
+        });
+
+        // Update UI
+        document.getElementById('year-display').innerText = `YEAR: ${Math.min(currentYear, 2047)}`;
+        
+        // Calculate Viksit Bharat Percentage
+        let progress = ((currentYear - 2014) + (yearProgress % 1)) / (2047 - 2014);
+        let percent = Math.min(Math.floor(progress * 100), 100);
+        document.getElementById('score-display').innerText = `VIKSIT BHARAT: ${percent}%`;
+
+        // Win Condition
+        if (currentYear >= 2047) {
+            winGame();
+            return;
+        }
+
+        frames++;
+        animationId = requestAnimationFrame(updateGame);
+    }
+
+    function startGame() {
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('game-over-screen').classList.add('hidden');
+        document.getElementById('win-screen').classList.add('hidden');
+        
+        // Reset state
+        isPlaying = true;
+        score = 0;
+        currentYear = 2014;
+        yearProgress = 0;
+        gameSpeed = 5;
+        frames = 0;
+        nextMilestoneIndex = 0;
+        obstacles = [];
+        clouds = [];
+        player.y = CANVAS_HEIGHT - FLOOR_HEIGHT - 60;
+        player.dy = 0;
+        
+        // Resize canvas internally
+        canvas.width = CANVAS_WIDTH;
+        canvas.height = CANVAS_HEIGHT;
+
+        updateGame();
+    }
+
+    function endGame() {
+        isPlaying = false;
+        cancelAnimationFrame(animationId);
+        document.getElementById('final-year').innerText = currentYear;
+        document.getElementById('game-over-screen').classList.remove('hidden');
+    }
+
+    function winGame() {
+        isPlaying = false;
+        cancelAnimationFrame(animationId);
+        document.getElementById('win-screen').classList.remove('hidden');
+        
+        // Draw one last time to ensure player is visible
+        player.draw();
+    }
+
+    // Event Listeners
+    document.getElementById('start-btn').addEventListener('click', startGame);
+    document.getElementById('restart-btn').addEventListener('click', startGame);
+    document.getElementById('play-again-btn').addEventListener('click', startGame);
+
+    // Initial Setup
+    canvas.width = CANVAS_WIDTH;
+    canvas.height = CANVAS_HEIGHT;
+    
+    // Draw initial static scene
+    ctx.fillStyle = '#87CEEB';
+    ctx.fillRect(0,0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    ctx.fillStyle = '#8B4513';
+    ctx.fillRect(0, CANVAS_HEIGHT - FLOOR_HEIGHT, CANVAS_WIDTH, FLOOR_HEIGHT);
+
+</script>
+</body>
+</html>
