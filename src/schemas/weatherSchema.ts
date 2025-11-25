@@ -1,11 +1,10 @@
-import { z } from "zod";
+import { z } from "zod"
 
 export const weatherSchema = z.object({
   lat: z.number(),
   lon: z.number(),
   timezone: z.string(),
   timezone_offset: z.number(),
-
   current: z.object({
     dt: z.number(),
     sunrise: z.number(),
@@ -20,7 +19,7 @@ export const weatherSchema = z.object({
     visibility: z.number(),
     wind_speed: z.number(),
     wind_deg: z.number(),
-    wind_gust: z.number(),
+    wind_gust: z.number().optional(),
     weather: z.array(
       z.object({
         id: z.number(),
@@ -30,7 +29,6 @@ export const weatherSchema = z.object({
       })
     ),
   }),
-
   hourly: z.array(
     z.object({
       dt: z.number(),
@@ -56,7 +54,6 @@ export const weatherSchema = z.object({
       pop: z.number(),
     })
   ),
-
   daily: z.array(
     z.object({
       dt: z.number(),
@@ -100,6 +97,4 @@ export const weatherSchema = z.object({
       uvi: z.number(),
     })
   ),
-});
-
-
+})
