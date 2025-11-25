@@ -8,7 +8,7 @@ function App() {
 
   const {data}= useQuery({
     queryKey:["weather"],
-    queryFn: ()=> getWeather({lat:50, lon:50})
+    queryFn: ()=> getWeather({lat:10, lon:25})
 
   })
 
