@@ -7,6 +7,8 @@ import Cloud from "../../assets/cloud.svg?react"
 import Uv from "../../assets/uv.svg?react"
 import Wind from "../../assets/wind.svg?react"
 import Pressure from "../../assets/pressure.svg?react"
+import UpArrow from"../../assets/uparrow.svg?react"
+import { transform } from "zod"
 
 
 type Props = {}
@@ -23,10 +25,15 @@ export default function AdditionalInfo({}: Props) {
     <Card title="Additional Weather Information" childrenClassName="flex flex-col gap-8 ">
         {rows.map(({label,value, Icon})=>(
             <div className="flex justify-between" key={value}>
-                <span>{label}</span>
-                <FormatComponent value ={value} number={data.current[value]}/>
-                <Icon className="size-8"/>
-            </div>
+                <div className="flex gap-4">
+                  <span className="text-gray-500">{label}</span>
+                  
+                  <Icon className="size-8 invert"/>
+                </div>
+           <span>
+                  <FormatComponent value ={value} number={data.current[value]}/>
+                </span> 
+                </div>
         ))}
     </Card>
 
@@ -34,12 +41,16 @@ export default function AdditionalInfo({}: Props) {
 }
 
 function FormatComponent({ value, number }: { value: string; number: number }) {
-  if (value === "sunrise" || value === "sunset")
+  if (value === "sunrise" || value === "sunset"){
     return new Date(number * 1000).toLocaleTimeString(undefined, {
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
-    })
+    })}
+
+    if (value === "wind_deg"){
+      return <UpArrow className="size-8 invert" style={{transform:`rotate(${number}deg)`}}/>
+    }
 
 
   return number
