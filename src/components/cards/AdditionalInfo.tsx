@@ -1,7 +1,12 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 import Card from "./Card"
 import { getWeather } from "../../api"
-
+import Sunrise from "/src/assets/sunrise.svg?react";
+import Sunset from "/src/assets/sunset.svg?react";
+import Wind from "/src/assets/wind.svg?react";
+import Uv from "/src/assets/uv.svg?react";
+import Pressure from "/src/assets/pressure.svg?react";
+import Cloud from "/src/assets/cloud.svg?react";
 
 type Props = {}
 
@@ -42,27 +47,33 @@ function FormatComponent({value, number}:{value: string,number:number}){
 const rows =[
     {
     label: "Cloudiness (%)",
-    value: 'clouds'
+    value: 'clouds',
+    icon: Cloud
 },
 {
     label: "UV Index",
-    value: "uvi"
+    value: "uvi",
+    icon: Uv
   },
   {
     label: "Wind Direction",
-    value: "wind_deg"
+    value: "wind_deg",
+    icon: Wind
   },
   {
     label: "Pressure (hPa)",
-    value: "pressure"
+    value: "pressure",
+    icon: Pressure
   },
   {
     label: "Sunrise",
-    value: "sunrise"
+    value: "sunrise",
+    icon: Sunrise
   },
   {
     label: "Sunset",
-    value: "sunset"
+    value: "sunset",
+    icon: Sunset
   }
 ] as const
 
