@@ -1,12 +1,13 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 import Card from "./Card"
 import { getWeather } from "../../api"
-import Sunrise from "/src/assets/sunrise.svg?react";
-import Sunset from "/src/assets/sunset.svg?react";
-import Wind from "/src/assets/wind.svg?react";
-import Uv from "/src/assets/uv.svg?react";
-import Pressure from "/src/assets/pressure.svg?react";
-import Cloud from "/src/assets/cloud.svg?react";
+import Sunrise from "../../assets/sunrise.svg?react"
+import Sunset from "../../assets/sunset.svg?react"
+import Cloud from "../../assets/cloud.svg?react"
+import Uv from "../../assets/uv.svg?react"
+import Wind from "../../assets/wind.svg?react"
+import Pressure from "../../assets/pressure.svg?react"
+
 
 type Props = {}
 
@@ -20,10 +21,11 @@ export default function AdditionalInfo({}: Props) {
   return (
 
     <Card title="Additional Weather Information" childrenClassName="flex flex-col gap-8 ">
-        {rows.map(({label,value})=>(
+        {rows.map(({label,value, Icon})=>(
             <div className="flex justify-between" key={value}>
                 <span>{label}</span>
                 <FormatComponent value ={value} number={data.current[value]}/>
+                <Icon className="size-8"/>
             </div>
         ))}
     </Card>
@@ -31,49 +33,47 @@ export default function AdditionalInfo({}: Props) {
 )
 }
 
-function FormatComponent({value, number}:{value: string,number:number}){
-    if(value === 'sunrise'|| value === 'sunset'){
-        return new Date(number*1000).toLocaleTimeString(undefined,{ 
-                    hour:"numeric",
-                    minute:"2-digit",
-                    hour12:true
-                })
-    }
+function FormatComponent({ value, number }: { value: string; number: number }) {
+  if (value === "sunrise" || value === "sunset")
+    return new Date(number * 1000).toLocaleTimeString(undefined, {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    })
 
-    return number
 
+  return number
 }
 
-const rows =[
-    {
+const rows = [
+  {
     label: "Cloudiness (%)",
-    value: 'clouds',
-    icon: Cloud
-},
-{
+    value: "clouds",
+    Icon: Cloud,
+  },
+  {
     label: "UV Index",
     value: "uvi",
-    icon: Uv
+    Icon: Uv,
   },
   {
     label: "Wind Direction",
     value: "wind_deg",
-    icon: Wind
+    Icon: Wind,
   },
   {
     label: "Pressure (hPa)",
     value: "pressure",
-    icon: Pressure
+    Icon: Pressure,
   },
   {
     label: "Sunrise",
     value: "sunrise",
-    icon: Sunrise
+    Icon: Sunrise,
   },
   {
     label: "Sunset",
     value: "sunset",
-    icon: Sunset
-  }
+    Icon: Sunset,
+  },
 ] as const
-
