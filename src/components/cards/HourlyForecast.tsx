@@ -9,7 +9,7 @@ type Props = {}
 export default function HourlyForecast({}: Props) {
           const {data}= useSuspenseQuery({
     queryKey:["weather"],
-    queryFn: ()=> getWeather({lat:78.4772, lon:17.4065})
+    queryFn: ()=> getWeather({lat:3.7128, lon:99.6})
 
   })
   return (
@@ -17,7 +17,7 @@ export default function HourlyForecast({}: Props) {
     {
         data.hourly.map(hour=>(
             <div key={hour.dt} className='flex flex-col gap-2 items-center p-2'>
-                <p className="whitespace-nowrap">{new Date(hour.dt * 1000).toLocaleTimeString(undefined,{
+                <p className="whitespace-nowrap">{new Date(hour.dt * 1000).toLocaleTimeString(undefined,{ 
                     hour:"numeric",
                     minute:"2-digit",
                     hour12:true
