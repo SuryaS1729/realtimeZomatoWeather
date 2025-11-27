@@ -18,12 +18,25 @@ export default function AdditionalInfo({}: Props) {
         {rows.map(({label,value})=>(
             <div className="flex justify-between" key={value}>
                 <span>{label}</span>
-                <span>{data.current[value]}</span>
+                <FormatComponent value ={value} number={data.current[value]}/>
             </div>
         ))}
     </Card>
 
 )
+}
+
+function FormatComponent({value, number}:{value: string,number:number}){
+    if(value === 'sunrise'|| value === 'sunset'){
+        return new Date(number*1000).toLocaleTimeString(undefined,{ 
+                    hour:"numeric",
+                    minute:"2-digit",
+                    hour12:true
+                })
+    }
+
+    return number
+
 }
 
 const rows =[
