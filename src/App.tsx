@@ -10,7 +10,7 @@ function App() {
 
   const {data}= useQuery({
     queryKey:["weather"],
-    queryFn: ()=> getWeather({lat:10, lon:25})
+    queryFn: ()=> getWeather({lat:17.4065, lon:78.4772})
 
   })
 
