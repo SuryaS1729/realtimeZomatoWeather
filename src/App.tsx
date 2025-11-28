@@ -17,7 +17,7 @@ function App() {
   })
   const [location, setLocation]= useState<string>("Tokyo")
 
-  const {data}= useQuery({
+  const {data: geocodeData}= useQuery({
     queryKey:["geocode", location],
     queryFn: ()=> getGeocoding(location),
   })
@@ -27,13 +27,13 @@ function App() {
     setLocation("custom")
   } 
   const coords = location ==="custom" ? coordinates : {
-    lat: data?.[0].lat ??0,
-    lon: data?.[0].lon ?? 0
+    lat: geocodeData?.[0].lat ??0,
+    lon: geocodeData?.[0].lon ?? 0
   }
 
   return (
     <div className="flex flex-col gap-8 shadow-md">
-      <LocationDropDown/>
+      <LocationDropDown location={location} setLocation={setLocation}/>
       <Map coords = {coords} onMapClick ={onMapClick}/>
 <CurrentWeather coords = {coords}/>
 <HourlyForecast coords = {coords}/>
@@ -45,3 +45,4 @@ function App() {
 }
 
 export default App
+
