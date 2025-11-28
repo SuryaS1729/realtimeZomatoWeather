@@ -1,3 +1,4 @@
+import { geocodeSchema,  } from "./schemas/geoCodingSchema";
 import { weatherSchema } from "./schemas/weatherSchema";
 
 
@@ -17,6 +18,6 @@ export async function getGeocoding(location:string) {
 
     const res = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&appid=${API_KEY}`)
     const data = await res.json()
-    return data
+    return geocodeSchema.parse(data)
 
 }
