@@ -1,5 +1,3 @@
-import { useQuery } from "@tanstack/react-query"
-import { getWeather } from "./api"
 
 import DailyForecast from "./components/cards/DailyForecast"
 import HourlyForecast from "./components/cards/HourlyForecast"
@@ -8,6 +6,7 @@ import AdditionalInfo from "./components/cards/AdditionalInfo"
 import Map from "./components/Map"
 import { useState } from "react"
 import type { Coords } from "./types"
+import LocationDropDown from "./components/dropdowns/LocationDropDown"
 
 
 function App() {
@@ -21,6 +20,7 @@ function App() {
 
   return (
     <div className="flex flex-col gap-8 shadow-md">
+      <LocationDropDown/>
       <Map coords = {coords} onMapClick ={onMapClick}/>
 <CurrentWeather coords = {coords}/>
 <HourlyForecast coords = {coords}/>
