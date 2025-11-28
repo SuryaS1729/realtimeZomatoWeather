@@ -6,16 +6,12 @@ import HourlyForecast from "./components/cards/HourlyForecast"
 import CurrentWeather from "./components/cards/CurrentWeather"
 import AdditionalInfo from "./components/cards/AdditionalInfo"
 import Map from "./components/Map"
+import { useState } from "react"
 
 
 function App() {
-    console.log("fetching...")
-
-
-  const {data}= useQuery({
-    queryKey:["weather"],
-    queryFn: ()=> getWeather({lat:3.7128, lon:99.6})
-
+  const [coords,setCoords]= useState({
+    lat:10, lon:25
   })
 
   return (
