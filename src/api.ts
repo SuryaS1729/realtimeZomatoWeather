@@ -12,3 +12,11 @@ export async function getWeather({lat,lon}:{lat:number, lon:number}) {
     return weatherSchema.parse(data)
 
 }
+
+export async function getGeocoding(location:string) {
+
+    const res = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&appid=${API_KEY}`)
+    const data = await res.json()
+    return data
+
+}
