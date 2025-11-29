@@ -12,7 +12,7 @@ type Props = {
     setLocation: Dispatch<SetStateAction<string>>
 }
 
-export default function LocationDropDown({location, setLocation}: Props) {
+export default function LocationDropdown({location, setLocation}: Props) {
   return (
 <Select value={location} onValueChange={(value)=> setLocation(value)}>
   <SelectTrigger className="w-[180px]">

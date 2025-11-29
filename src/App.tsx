@@ -4,13 +4,18 @@ import HourlyForecast from "./components/cards/HourlyForecast"
 import CurrentWeather from "./components/cards/CurrentWeather"
 import AdditionalInfo from "./components/cards/AdditionalInfo"
 import Map from "./components/Map"
-import { useState } from "react"
+import { Suspense, useState } from "react"
 import type { Coords } from "./types"
-import LocationDropDown from "./components/dropdowns/LocationDropDown"
 import { useQuery } from "@tanstack/react-query"
 import { getGeocoding } from "./api"
-import MaptypeDropDown from "./components/dropdowns/MaptypeDropdown"
+
 import MapLegend from "./components/MapLegend"
+import CurrentSkeleton from "./components/skeletons/CurrentSkeleton"
+import MaptypeDropdown from "./components/dropdowns/MaptypeDropdown"
+import LocationDropdown from "./components/dropdowns/LocationDropdown"
+import HourlySkeleton from "./components/skeletons/HourlySkeleton"
+import DailySkeleton from "./components/skeletons/DailySkeleton"
+import AdditionalInfoSkeleton from "./components/skeletons/AdditionalInfoSkeleton"
 
 
 function App() {
@@ -39,21 +44,29 @@ function App() {
       <div className="flex gap-8">
         <div className="flex gap-4">
           <h1 className="text-xl font-semibold">Location:</h1>
-          <LocationDropDown location={location} setLocation={setLocation}/>
+          <LocationDropdown location={location} setLocation={setLocation}/>
         </div>
         <div className="flex gap-4">
           <h1 className=" text-xl font-semibold ">Map Type:</h1>
-          <MaptypeDropDown mapType={mapType} setMapType={setMapType}/>
+          <MaptypeDropdown mapType={mapType} setMapType={setMapType}/>
         </div>
       </div>
       <div className="relative">
         <Map coords = {coords} onMapClick ={onMapClick} mapType={mapType} />
         <MapLegend mapType={mapType}/>
         </div>
-<CurrentWeather coords = {coords}/>
-<HourlyForecast coords = {coords}/>
-<DailyForecast coords = {coords}/>
-<AdditionalInfo coords = {coords}/>
+<Suspense fallback={<CurrentSkeleton/>}>
+  <CurrentWeather coords = {coords}/>
+</Suspense>
+<Suspense fallback={<HourlySkeleton/>}>
+  <HourlyForecast coords = {coords}/>
+</Suspense>
+<Suspense fallback={<DailySkeleton/>} >
+  <DailyForecast coords = {coords}/>
+</Suspense>
+<Suspense fallback={<AdditionalInfoSkeleton/>}>
+  <AdditionalInfo coords = {coords}/>
+</Suspense>
 </div>
 )
 

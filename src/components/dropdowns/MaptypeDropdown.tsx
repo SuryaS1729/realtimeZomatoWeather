@@ -12,7 +12,7 @@ type Props = {
     setMapType: Dispatch<SetStateAction<string>>
 }
 
-export default function MaptypeDropDown({mapType, setMapType}: Props) {
+export default function MaptypeDropdown({mapType, setMapType}: Props) {
   return (
 <Select value={mapType} onValueChange={(value)=> setMapType(value)}>
   <SelectTrigger className="w-[180px]">
