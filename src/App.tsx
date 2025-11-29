@@ -36,8 +36,14 @@ function App() {
   return (
     <div className="flex flex-col gap-8 shadow-md">
       <div className="flex gap-8">
-        <LocationDropDown location={location} setLocation={setLocation}/>
-        <MaptypeDropDown mapType={mapType} setMapType={setMapType}/>
+        <div className="flex gap-4">
+          <h1 className="text-xl font-semibold">Location:</h1>
+          <LocationDropDown location={location} setLocation={setLocation}/>
+        </div>
+        <div className="flex gap-4">
+          <h1 className=" text-xl font-semibold ">Map Type:</h1>
+          <MaptypeDropDown mapType={mapType} setMapType={setMapType}/>
+        </div>
       </div>
       <Map coords = {coords} onMapClick ={onMapClick} mapType={mapType} />
 <CurrentWeather coords = {coords}/>
