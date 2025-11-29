@@ -46,7 +46,7 @@ function App() {
           <MaptypeDropDown mapType={mapType} setMapType={setMapType}/>
         </div>
       </div>
-      <div>
+      <div className="relative">
         <Map coords = {coords} onMapClick ={onMapClick} mapType={mapType} />
         <MapLegend mapType={mapType}/>
         </div>
