@@ -2,6 +2,8 @@
 import { MapContainer, TileLayer, Marker, useMap,  } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Coords } from '@/types';
+import { useEffect } from 'react';
+import { MaptilerLayer } from "@maptiler/leaflet-maptilersdk"
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 
@@ -42,4 +44,22 @@ function MapClick({onMapClick, coords}:{onMapClick:(lat:number, lon:number)=>voi
 
 
     return null
+}
+
+function MapTileLayer() {
+  const map = useMap()
+
+  useEffect(() => {
+    const tileLayer = new MaptilerLayer({
+      style: "basic-dark",
+      apiKey: "IhKaCSDZTkOXDUTqcSbm",
+    })
+    tileLayer.addTo(map)
+
+    return () => {
+      map.removeLayer(tileLayer)
+    }
+  }, [map])
+
+  return null
 }
