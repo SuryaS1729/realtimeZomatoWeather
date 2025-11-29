@@ -70,7 +70,7 @@ function App() {
         <AdditionalInfo coords = {coords}/>
       </Suspense>
       </div>
-            <SidePanel/>
+            <SidePanel coords = {coords}/>
 
     </>
 )
