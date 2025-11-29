@@ -3,6 +3,8 @@ import { MapContainer, TileLayer, Marker, useMap,  } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Coords } from '@/types';
 
+const API_KEY = import.meta.env.VITE_API_KEY;
+
 type Props = {
     coords:Coords
     onMapClick:(lat:number, lon:number)=>void
@@ -19,6 +21,7 @@ center={[lat, lon]} zoom={5} style={{width: "700px", height: "500px",  }}>
     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
   />
+  <TileLayer url={`https://tile.openweathermap.org/map/{layer}/{z}/{x}/{y}.png?appid=${API_KEY}`}/>
     <MapClick onMapClick={onMapClick} coords = {coords}/>
   <Marker position={[lat,lon]}/>
 </MapContainer>  )
