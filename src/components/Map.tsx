@@ -20,11 +20,8 @@ export default function Map({coords, onMapClick, mapType}: Props) {
 <MapContainer 
 
 center={[lat, lon]} zoom={5} style={{width: "1000px", height: "500px",  }}>
-  <TileLayer
-    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-  />
-  <TileLayer url={`https://tile.openweathermap.org/map/${mapType}/{z}/{x}/{y}.png?appid=${API_KEY}`}/>
+  <MapTileLayer/>
+  <TileLayer opacity={0.7} url={`https://tile.openweathermap.org/map/${mapType}/{z}/{x}/{y}.png?appid=${API_KEY}`}/>
     <MapClick onMapClick={onMapClick} coords = {coords}/>
   <Marker position={[lat,lon]}/>
 </MapContainer>  )
@@ -52,7 +49,7 @@ function MapTileLayer() {
   useEffect(() => {
     const tileLayer = new MaptilerLayer({
       style: "basic-dark",
-      apiKey: "IhKaCSDZTkOXDUTqcSbm",
+      apiKey: "7dX9wTjM15cfKrCfELvs",
     })
     tileLayer.addTo(map)
 
