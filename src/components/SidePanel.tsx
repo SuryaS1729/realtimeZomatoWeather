@@ -4,6 +4,7 @@ import { useSuspenseQuery } from "@tanstack/react-query"
 import { Suspense } from "react"
 import Card from "./cards/Card"
 import { Slider } from "@/components/ui/slider"
+import clsx from "clsx"
 
 
 type Props = {
@@ -12,7 +13,7 @@ type Props = {
 
 export default function SidePanel(props: Props){
   return (
-    <div className='fixed top-0 right-0 h-screen w-90 shadow-md bg-sidebar z-1001 py-8 px-4'>
+    <div className='fixed top-0 right-0 h-screen w-90 shadow-md bg-sidebar z-1001 py-8 px-4 overflow-y-scroll'>
         <Suspense>
            <AirPollution {...props}/>
         </Suspense>
@@ -34,6 +35,9 @@ function AirPollution({coords}: Props) {
         <h1 className="text-5xl font-semibold">{data.list[0].main.aqi}</h1>
         <h1 className="text-2xl font-semibold">AQI</h1>
         {Object.entries(data.list[0].components).map(([key,value])=>{
+          
+          const pollutant = airQualityRanges[key.toUpperCase() as keyof typeof airQualityRanges]
+          const max = Math.max(pollutant['Very Poor'].min, value)
           return(
             <Card 
               key={key} 
@@ -43,7 +47,20 @@ function AirPollution({coords}: Props) {
                 <span className="text-lg font-bold capitalize">{key}</span>
                 <span className="text-lg font-semibold">{value}</span>
               </div>
-              <Slider min={0} disabled/>
+              <Slider min={0} max = {max} value = {[value]} disabled/>
+              <div className="flex justify-between">
+                <p>0</p>
+                <p >{max}</p>
+              </div>
+              <div className="flex justify-between">
+                  {Object.keys(pollutant).map(
+                    quality=>(
+                      <span className={clsx("px-2 py-1 rounded-md text-xs font-medium", quality===currentLevel? "bg-yellow-500": "bg-muted")}>
+                          {quality}
+                      </span>
+                    )
+                  )}
+              </div>
             </Card>
           )
         })}
