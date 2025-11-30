@@ -38,6 +38,13 @@ function AirPollution({coords}: Props) {
           
           const pollutant = airQualityRanges[key.toUpperCase() as keyof typeof airQualityRanges]
           const max = Math.max(pollutant['Very Poor'].min, value)
+          const currentLevel = (()=>{
+            for(const [level,range] of Object.entries(pollutant)){
+              if(value>= range.min&&  (range.max ===null || value <= range.max)) return level
+            }
+            return "Very Poor"
+
+          })()
           return(
             <Card 
               key={key} 
@@ -55,7 +62,7 @@ function AirPollution({coords}: Props) {
               <div className="flex justify-between">
                   {Object.keys(pollutant).map(
                     quality=>(
-                      <span className={clsx("px-2 py-1 rounded-md text-xs font-medium", quality===currentLevel? "bg-yellow-500": "bg-muted")}>
+                      <span className={clsx("px-2 py-1 rounded-md text-xs font-medium", quality===currentLevel? "bg-yellow-500": "bg-muted text-muted-foreground")}>
                           {quality}
                       </span>
                     )
