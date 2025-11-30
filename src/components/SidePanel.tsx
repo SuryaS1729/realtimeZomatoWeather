@@ -3,6 +3,7 @@ import type { Coords } from "@/types"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { Suspense } from "react"
 import Card from "./cards/Card"
+import { Slider } from "@/components/ui/slider"
 
 
 type Props = {
@@ -34,11 +35,15 @@ function AirPollution({coords}: Props) {
         <h1 className="text-2xl font-semibold">AQI</h1>
         {Object.entries(data.list[0].components).map(([key,value])=>{
           return(
-            <Card key={key} className="hover:scale-105 transition-transform duration-160 from-sidebar-accent to-sidebar-accent/45">
+            <Card 
+              key={key} 
+              childrenClassName="flex flex-col gap-3"
+              className="hover:scale-105 transition-transform duration-160 from-sidebar-accent to-sidebar-accent/45">
               <div className="flex justify-between">
                 <span className="text-lg font-bold capitalize">{key}</span>
                 <span className="text-lg font-semibold">{value}</span>
               </div>
+              <Slider disabled/>
             </Card>
           )
         })}
