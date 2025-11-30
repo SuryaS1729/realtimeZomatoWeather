@@ -11,15 +11,23 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import Information from "../assets/information.svg?react"
+import ChevronLeft from "../assets/ChevronLeft.svg?react"
 
 
 type Props = {
   coords: Coords
+  isOpen: boolean
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function SidePanel(props: Props){
+  const {isOpen,setIsOpen} = props
   return (
-    <div className='fixed top-0 right-0 h-screen w-90 shadow-md bg-sidebar z-1001 py-8 px-4 overflow-y-scroll'>
+    <div className={clsx('fixed top-0 right-0 h-screen w-90 shadow-md bg-sidebar z-1001 py-8 px-4 overflow-y-scroll transition-transform duration-300', isOpen ? 'translate-x-0':'translate-x-full')}>
+      <button onClick={()=> setIsOpen(false)}>
+        <ChevronLeft className="size-10 invert -ml-2"/>
+
+      </button>
         <Suspense>
            <AirPollution {...props}/>
         </Suspense>
