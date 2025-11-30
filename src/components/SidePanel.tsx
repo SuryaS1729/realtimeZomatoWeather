@@ -45,6 +45,24 @@ function AirPollution({coords}: Props) {
             return "Very Poor"
 
           })()
+
+          const qualityColor = (()=>{
+              switch(currentLevel){
+                case "Good":
+                 return 'bg-green-700'
+                case "Fair":
+                 return 'bg-yellow-600'
+                 case "Moderate":
+                 return 'bg-orange-600'
+                 case "Poor":
+                 return 'bg-red-800'
+                 case "Very Poor":
+                 return 'bg-purple-900' 
+                 default:
+                  return 'bg-zinc-500'
+              }
+
+          })()
           return(
             <Card 
               key={key} 
@@ -62,7 +80,7 @@ function AirPollution({coords}: Props) {
               <div className="flex justify-between">
                   {Object.keys(pollutant).map(
                     quality=>(
-                      <span className={clsx("px-2 py-1 rounded-md text-xs font-medium", quality===currentLevel? "bg-yellow-500": "bg-muted text-muted-foreground")}>
+                      <span className={clsx("px-2 py-1 rounded-md text-xs font-medium", quality===currentLevel? qualityColor: "bg-muted text-muted-foreground")}>
                           {quality}
                       </span>
                     )
