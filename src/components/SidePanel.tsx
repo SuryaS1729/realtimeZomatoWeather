@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/tooltip"
 import Information from "../assets/information.svg?react"
 import ChevronLeft from "../assets/ChevronLeft.svg?react"
+import SidePanelSkeleton from "./skeletons/SidePanelSkeleton"
 
 
 type Props = {
@@ -28,7 +29,7 @@ export default function SidePanel(props: Props){
         <ChevronLeft className="size-10 invert -ml-2"/>
 
       </button>
-        <Suspense>
+        <Suspense fallback= {<SidePanelSkeleton/>}>
            <AirPollution {...props}/>
         </Suspense>
     </div>
