@@ -59,7 +59,9 @@ function App() {
             <MaptypeDropdown mapType={mapType} setMapType={setMapType}/>
           </div> 
           <div className="ml-auto flex gap-4 items-center">
-            <LightDarkToggle />
+            <div className="hidden xs:block">
+              <LightDarkToggle />
+            </div>
              <button onClick={()=>setIsSidePanelOpen(true)} className="hidden xs:block ">
                     <Hamburger className="size-10  ml-auto lg:hidden"/>
             
