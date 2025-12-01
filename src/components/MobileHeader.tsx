@@ -12,7 +12,7 @@ export default function MobileHeader({setIsSidePanelOpen}: Props) {
                 <button 
                 onClick={()=>setIsSidePanelOpen(true)}
 >
-        <Hamburger className="size-6 invert"/>
+        <Hamburger className="size-6 "/>
 
       </button>
     </div>

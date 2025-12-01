@@ -19,6 +19,7 @@ import AdditionalInfoSkeleton from "./components/skeletons/AdditionalInfoSkeleto
 import SidePanel from "./components/SidePanel"
 import Hamburger from "./assets/hamburger.svg?react"
 import MobileHeader from "./components/MobileHeader"
+import LightDarkToggle from "./components/LightDarkToggle"
 
 
 
@@ -57,10 +58,13 @@ function App() {
             <h1 className=" text-xl font-semibold whitespace-nowrap ">Map Type:</h1>
             <MaptypeDropdown mapType={mapType} setMapType={setMapType}/>
           </div> 
-           <button onClick={()=>setIsSidePanelOpen(true)} className="hidden xs:block ">
-        <Hamburger className="size-10 invert ml-auto lg:hidden"/>
-
-      </button>
+          <div className="ml-auto flex gap-4 items-center">
+            <LightDarkToggle />
+             <button onClick={()=>setIsSidePanelOpen(true)} className="hidden xs:block ">
+                    <Hamburger className="size-10  ml-auto lg:hidden"/>
+            
+                  </button>
+          </div>
         </div>
         <div className="grid 2xl:flex-1 2xl:min-h-0 grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 2xl:grid-rows-4 gap-4">
           <div className="relative h-120 2xl:h-auto col-span-1 md:col-span-2 2xl:col-span-4 2xl:row-span-2 order-1">
