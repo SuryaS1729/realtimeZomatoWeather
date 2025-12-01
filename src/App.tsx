@@ -18,6 +18,7 @@ import DailySkeleton from "./components/skeletons/DailySkeleton"
 import AdditionalInfoSkeleton from "./components/skeletons/AdditionalInfoSkeleton"
 import SidePanel from "./components/SidePanel"
 import Hamburger from "./assets/hamburger.svg?react"
+import MobileHeader from "./components/MobileHeader"
 
 
 
@@ -45,7 +46,8 @@ function App() {
 
   return (
     <>
-      <div className="flex flex-col gap-8 p-8 w-full lg:w-[calc(100dvw-var(--sidebar-width))] 2xl:h-screen">
+    <MobileHeader setIsSidePanelOpen={setIsSidePanelOpen}/>
+      <div className="flex flex-col gap-8 pt-4 p-8 xs:pt-8  w-full lg:w-[calc(100dvw-var(--sidebar-width))] 2xl:h-screen min-h-[1120px]">
         <div className="flex flex-col gap-4 xs:flex-row xs:gap-8">
           <div className="flex flex-col md:flex-row gap-2 md:gap-4">
             <h1 className="text-xl font-semibold">Location:</h1>
@@ -55,7 +57,7 @@ function App() {
             <h1 className=" text-xl font-semibold whitespace-nowrap ">Map Type:</h1>
             <MaptypeDropdown mapType={mapType} setMapType={setMapType}/>
           </div> 
-           <button onClick={()=>setIsSidePanelOpen(true)} className="hidden xs:block">
+           <button onClick={()=>setIsSidePanelOpen(true)} className="hidden xs:block ">
         <Hamburger className="size-10 invert ml-auto lg:hidden"/>
 
       </button>
