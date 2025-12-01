@@ -26,7 +26,7 @@ export default function SidePanel(props: Props){
   return (
     <div className={clsx('fixed top-0 right-0 h-screen w-(--sidebar-width) shadow-md bg-sidebar z-1001 py-8 px-4 overflow-y-scroll transition-transform duration-300 lg:translate-x-0!',  isOpen ? 'translate-x-0':'translate-x-full')}>
       <button onClick={()=> setIsOpen(false)}>
-        <ChevronLeft className="size-10 invert -ml-2"/>
+        <ChevronLeft className="size-10 invert -ml-2 lg:hidden"/>
 
       </button>
         <Suspense fallback= {<SidePanelSkeleton/>}>
