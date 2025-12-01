@@ -27,7 +27,7 @@ function App() {
   })
   const [location, setLocation]= useState<string>("Tokyo")
   const [mapType, setMapType]= useState<string>("clouds_new")
-  const [isSidePanelOpen, setIsSidePanelOpen]= useState<boolean>(true)
+  const [isSidePanelOpen, setIsSidePanelOpen]= useState<boolean>(false)
 
   const {data: geocodeData}= useQuery({
     queryKey:["geocode", location],
@@ -45,7 +45,7 @@ function App() {
 
   return (
     <>
-      <div className="flex flex-col gap-8 shadow-md">
+      <div className="flex flex-col gap-8 p-8 w-full lg:w-[calc(100dvw-var(--sidebar-width))]">
         <div className="flex gap-8">
           <div className="flex gap-4">
             <h1 className="text-xl font-semibold">Location:</h1>

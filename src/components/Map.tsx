@@ -19,7 +19,7 @@ export default function Map({coords, onMapClick, mapType}: Props) {
   return (
 <MapContainer 
 
-center={[lat, lon]} zoom={5} style={{width: "1000px", height: "500px",  }}>
+center={[lat, lon]} zoom={5} style={{width: "100%", height: "500px",  }}>
   <MapTileLayer/>
   <TileLayer opacity={0.7} url={`https://tile.openweathermap.org/map/${mapType}/{z}/{x}/{y}.png?appid=${API_KEY}`}/>
     <MapClick onMapClick={onMapClick} coords = {coords}/>
