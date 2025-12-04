@@ -4,6 +4,8 @@ import 'leaflet/dist/leaflet.css';
 import type { Coords } from '@/types';
 import { useEffect } from 'react';
 import { MaptilerLayer } from "@maptiler/leaflet-maptilersdk"
+import markerIconPng from "leaflet/dist/images/marker-icon.png"
+import {Icon} from 'leaflet'
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 
@@ -23,7 +25,7 @@ center={[lat, lon]} zoom={5} style={{width: "100%", height: "100%",  }}>
   <MapTileLayer/>
   <TileLayer opacity={0.7} url={`https://tile.openweathermap.org/map/${mapType}/{z}/{x}/{y}.png?appid=${API_KEY}`}/>
     <MapClick onMapClick={onMapClick} coords = {coords}/>
-  <Marker position={[lat,lon]}/>
+<Marker position={[lat, lon]} icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41]})} />
 </MapContainer>  )
 }
 
